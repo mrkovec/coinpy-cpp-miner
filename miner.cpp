@@ -6,18 +6,25 @@
 #include "httplib.h"
 
 int main(int argc, char* argv[]) {
+  const char* host = "127.0.0.1";
+  int port = 2020;
   if (argc < 3) {
     std::cerr << "Usage: " << argv[0] << " <IP_ADDR> <PORT>" << std::endl;
-    return -1;
+    std::cerr << "Using defaul parameters" << std::endl;
+  } else {
+    host = argv[1];
+    port = std::stoi(argv[2]);
   }
+  std::cerr << "Starting miner with parameters " << host << " " << port << std::endl;
 
   unsigned int block_count = 0;
   double global_elapsed_seconds = 0;
 
-  httplib::Client cli(argv[1], std::stoi(argv[2]));
+  httplib::Client cli(host, port, 5);
   while(true) {
     auto res = cli.get("/");
     if (res && res->status == 200 && res->get_header_value("Content-Type") == "application/json") {
+      std::cout << "New block to mine" << std::endl;
       auto start = std::chrono::system_clock::now();
       cminer::BlockProxi block(res->body);
       auto res_resp = cli.post("/", block.mine(), "application/json");

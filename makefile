@@ -4,7 +4,7 @@ CC += $(FLAGS)
 CFLAGS = -IPicoSHA2 -Icpp-httplib
 
 all: miner.o
-	$(CC) blockproxi.o miner.o -o miner
+	$(CC) blockproxi.o miner.o -o coinpy-cpp-miner
 
 test: blockproxi_test
 	./blockproxi_test
